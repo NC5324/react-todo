@@ -10,13 +10,12 @@ const DefaultTodoItem = styled.div`
   border-radius: 20px;
 `
 
+export const getBorderStyle = (currentDate, startingDate) => {
+    return  currentDate < new Date(startingDate - 3600000*3) ? 'none' : '2px solid red'
+}
+
 const UrgentTodoItem = styled(DefaultTodoItem)`
-  border-bottom: ${props => {
-    if(new Date(props.createdAt) < new Date(Date.now() - 3600000 * 3)) {
-      return 'none'
-    }
-    return '2px solid red'
-  }};
+  border-bottom: ${props => getBorderStyle(new Date(props.createdAt), Date.now())}
 `
 
 const TodoText = styled.h2`
