@@ -2,17 +2,27 @@ import React from 'react'
 import styled from 'styled-components'
 import { Button } from './ui-components'
 
-const TodoItem = styled.div`
+const DefaultTodoItem = styled.div`
   padding: 10px;
   margin: 0 10px 10px;
 
   background-color: #313131;
-  border-radius: 20px;`
+  border-radius: 20px;
+`
+
+const UrgentTodoItem = styled(DefaultTodoItem)`
+  border-bottom: ${props => {
+    if(new Date(props.createdAt) < new Date(Date.now() - 3600000 * 3)) {
+      return 'none'
+    }
+    return '2px solid red'
+  }};
+`
 
 const TodoText = styled.h2`
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-
+  
   color: white;
   opacity: 0.87;
 `
@@ -28,8 +38,9 @@ const TodoItemButton = styled(Button)`
 `
 
 const TodoListItem = ({ todo, onRemovePressed, onCompletePressed }) => {
+    const TodoItem = todo.isCompleted ? DefaultTodoItem : UrgentTodoItem
     return (
-        <TodoItem>
+        <TodoItem createdAt={todo.createdAt}>
             <TodoText>{todo.text}</TodoText>
             <ButtonsContainer>
                 {todo.isCompleted ? null :
@@ -47,6 +58,9 @@ const TodoListItem = ({ todo, onRemovePressed, onCompletePressed }) => {
                     Remove
                 </TodoItemButton>
             </ButtonsContainer>
+            <p style={{color: 'white', textAlign: 'center'}}>Created at:&nbsp;
+                {(new Date(todo.createdAt)).toLocaleTimeString()}
+            </p>
         </TodoItem>
     )
 }
